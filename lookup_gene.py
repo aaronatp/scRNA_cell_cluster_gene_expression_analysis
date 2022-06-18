@@ -54,7 +54,6 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
         
         If counter=True,
         - returns a dict of clusters ordered by how many cells are in each"""
-    
     if gene is not None:
         options = df.filter(like=f'{gene}', axis=0).index
         if len(options) > 1 and sure==False:
@@ -63,7 +62,6 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
             return list_of_options
         if len(options) == 0:
             return print("Try again")
-
         if len(options) == 1 or sure==True and counter == True:
             if raw_number==True:
                 sorted_dict = sorted_counter_dict(gene, raw_number==True)
