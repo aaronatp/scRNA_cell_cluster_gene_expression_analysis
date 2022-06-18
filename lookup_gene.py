@@ -69,7 +69,8 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
                 sorted_dict = sorted_counter_dict(gene, raw_number==True)
             else:
                 sorted_dict = sorted_counter_dict(gene)
-#             print(f"The cell clusters that express {gene}, sorted according to how many cells in the cluster express {gene}, are:")
+            if __name__ == 'main':
+                print(f"The cell clusters that express {gene}, sorted according to how many cells in the cluster express {gene}, are:")
             return sorted_dict
         else:
             return data.loc[f'{gene}'][data.loc[f'{gene}'] > 0]
