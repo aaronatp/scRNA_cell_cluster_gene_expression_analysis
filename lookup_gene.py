@@ -1,7 +1,6 @@
 import pandas as pd
 from collections import Counter
 
-
 # Read in and preprocess data
 data = pd.read_csv('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/seurat_integrated.csv')
 cells_to_clusters = pd.read_csv('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/cells_to_clusters.csv')
