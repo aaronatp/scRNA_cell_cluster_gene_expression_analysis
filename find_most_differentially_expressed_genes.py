@@ -1,4 +1,5 @@
 import lookup_file
+import numpy as np
 import pandas as pd
 
 def diff_expression(gene, cluster1, cluster2):
