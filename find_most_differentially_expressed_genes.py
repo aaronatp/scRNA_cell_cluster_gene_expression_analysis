@@ -1,4 +1,4 @@
-import lookup_file
+import lookup_gene
 import numpy as np
 import pandas as pd
 
