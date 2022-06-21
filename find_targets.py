@@ -5,80 +5,6 @@ import matplotlib.pyplot as plt
 import re
 
 import sys, os
-
-
-def expression_distribution(gene, cluster):
-    '''Returns dict - keys are statistical concepts and dict-values are numerical values for those concepts'''
-    distribution = {}
-    try:
-        expression_levels = list(lookup_gene(gene=gene, sure=True, raw=True)[cluster])
-        distribution['Median'] = np.median(expression_levels)
-        distribution['Mean'] = np.mean(expression_levels)
-        distribution['Std'] = np.std(expression_levels)
-        distribution['High'] = np.max(expression_levels)
-        distribution['Low'] = np.min(expression_levels)
-        distribution['Pct of cells'] = sorted_counter_dict(gene)[cluster]
-        
-        print(f"The expression distribution of {gene} in cluster {cluster}:")
-        return distribution
-    
-    except KeyError:
-        return print(f"{gene} doesn't appear to be found in cluster {cluster}. Perhaps try a different cluster")
-    
-    except TypeError:
-        return print(f"{gene} appears to only be expressed in one cell in this cluster. "
-                    "No distribution can be inferred from this data unfortunately")
-      
-
-def plot_expression_distribution(gene, cluster):
-    '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster''''
-    with HiddenPrints():
-        cell_number = data_dict[cluster]
-        median = expression_distribution(gene=gene, cluster=cluster)['Median']
-        low = expression_distribution(gene=gene, cluster=cluster)['Low']
-    
-    print(f"{gene} has {cell_number} cells, and has a median expression of {median} transcripts per cell. "
-         f"There are at least {low} transcripts in each cell")
-    
-    a = np.hstack(list(lookup_gene(gene=gene, sure=True, raw=True)[cluster]))
-    _ = plt.hist(a, bins='auto')
-    plt.show()
-
-
-def effect(dict1, dict2, dict_entry):
-    return dict1[f"{dict_entry}"] - dict2[f"{dict_entry}"]
-
-def compare_treat_ctrl(dictionary, cluster_num):
-    '''Compares expression of genes in treat and control of same cluster
-        - Returns dict: keys are genes, values are list of statistical information'''
-    treat_effect = {}
-    with HiddenPrints():
-        for i in list(dictionary.keys()):
-            ctrl = expression_distribution(gene=i, cluster=str(cluster_num) + '_CTRL')
-            treat = expression_distribution(gene=i, cluster=str(cluster_num) + '_TREAT')
-            treat_effect[i] = {'CTRL Median': ctrl['Median'], 'Median effect': effect(treat, ctrl, 'Median'), 'Pct of cells effect': effect(treat, ctrl, 'Pct of cells')}
-
-    return treat_effect
-
-
-def compare_to_rest(cluster1, cluster2, thresh, n_keep, group=None, df=data_treat):
-    '''Returns dict - keys are genes that are differentially expressed between cluster1
-        and cluster2, and are not expressed greater than 'thresh' in any other cluster,
-        and keys are expression levels'''
-    with HiddenPrints():
-        diff_expressed = most_diff_exp(cluster1, cluster2, n_keep, df=data_treat)[0]
-    
-    clusters_keep = {}
-    for i in diff_expressed:
-        keep = dict(filter(lambda elem: elem[1] > thresh, lookup_gene(gene=i, sure=True).items()))
-        if group is not None:
-            keep = {k:v for k,v in keep.items() if k.endswith(group)}
-        if len(keep) == 1:
-            clusters_keep[i] = list(keep)[0]
-    
-    print(f"\nThe list of genes that are differentialy expressed between cluster {cluster1} and cluster "
-          f"{cluster2}, that are not expressed in more than {thresh} of any other cluster, are:")
-    return clusters_keep
   
   
 brain_genes = pd.read_csv('/Users/aaronpresser/Downloads/genes_expressed_in_brain_proteinatlas.tsv', sep='\t')
@@ -125,19 +51,17 @@ def express_lookup_gene(gene):
 
 def genes_expressed(cluster, data=data_treat):
     """Returns a list of all the genes recorded to be expressed in a particular cluster"""
-    genes = []
+    expressed = []
     for i in data.index:
         try:
             express_lookup_gene(gene=i)[cluster]
             print(f"{i} is expressed in {cluster}")
-            genes.append(i)
+            expressed.append(i)
         except KeyError:
-            print(f"{i} isn't expressed\n")
+            print(f"\t{i} isn't expressed")
             continue
-    return genes
+    return expressed
 
 gbm_genes = genes_expressed(cluster='6_TREAT')
 
 gbm_surface_genes = [gene for gene in gbm_genes if gene in extended_surfaceome]
-
-  
