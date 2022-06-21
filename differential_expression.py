@@ -62,18 +62,23 @@ with open('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gen
     d.write(str(diff_exp_treat_6_0))
     
 
-def compare_to_rest(cluster1, cluster2, thresh, n_keep, df=data):
+def compare_to_rest(cluster1, cluster2, thresh, n_keep, group=None, df=data_treat):
+    '''Returns dict - keys are genes that are differentially expressed between cluster1
+        and cluster2, and are not expressed greater than 'thresh' in any other cluster,
+        and keys are expression levels'''
     with HiddenPrints():
-        diff_expressed = most_diff_exp(cluster1, cluster2, n_keep, df=data_treat[:100])[0]
+        diff_expressed = most_diff_exp(cluster1, cluster2, n_keep, df=data_treat)[0]
     
     clusters_keep = {}
     for i in diff_expressed:
         keep = dict(filter(lambda elem: elem[1] > thresh, lookup_gene(gene=i, sure=True).items()))
+        if group is not None:
+            keep = {k:v for k,v in keep.items() if k.endswith(group)}
         if len(keep) == 1:
             clusters_keep[i] = list(keep)[0]
     
-    print(f"\nThe list of genes that are differentialy expressed between cluster 1 and cluster 2," 
-            f"that are not expressed in more than {thresh} of any other cluster, are:")
+    print(f"\nThe list of genes that are differentialy expressed between cluster {cluster1} and cluster "
+          f"{cluster2}, that are not expressed in more than {thresh} of any other cluster, are:")
     return clusters_keep
 
     
@@ -81,6 +86,8 @@ def effect(dict1, dict2, dict_entry):
     return dict1[f"{dict_entry}"] - dict2[f"{dict_entry}"]
 
 def compare_treat_ctrl(dictionary, cluster_num):
+    '''Compares expression of genes in treat and control of same cluster
+        - Returns dict: keys are genes, values are list of statistical information'''
     treat_effect = {}
     with HiddenPrints():
         for i in list(dictionary.keys()):
@@ -92,6 +99,7 @@ def compare_treat_ctrl(dictionary, cluster_num):
 
 
 def expression_distribution(gene, cluster):
+    '''Returns dict - keys are statistical concepts and dict-values are numerical values for those concepts'''
     distribution = {}
     try:
         expression_levels = list(lookup_gene(gene=gene, sure=True, raw=True)[cluster])
@@ -111,9 +119,10 @@ def expression_distribution(gene, cluster):
     except TypeError:
         return print(f"{gene} appears to only be expressed in one cell in this cluster. "
                     "No distribution can be inferred from this data unfortunately")
-    
+      
 
 def plot_expression_distribution(gene, cluster):
+    '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster''''
     with HiddenPrints():
         cell_number = data_dict[cluster]
         median = expression_distribution(gene=gene, cluster=cluster)['Median']
