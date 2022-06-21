@@ -66,6 +66,7 @@ def sorted_counter_dict(gene, data=data, proportion=True):
 
 
 def sort_dict_by_freq(store):
+    '''Sorts a dictionary's items by the frequency of the values in it'''
     freq = {} 
     for value in store.values(): 
         if freq.get(value) == None: 
