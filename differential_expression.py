@@ -3,6 +3,12 @@ import numpy as np
 import pandas as pd
 
 def diff_expression(gene, cluster1, cluster2):
+    '''Finds difference in proportion of cells that express gene between two clusters
+            
+        - Returns: 
+            - -2 if neither cluster expresses gene
+            - Difference between two proportions if gene is expressed in at least one cluster
+            ''' 
     dict1 = lookup_gene(gene=gene, sure=True)
     counter = 0
     try:
@@ -22,6 +28,13 @@ def diff_expression(gene, cluster1, cluster2):
     
 
 def most_diff_exp(cluster1, cluster2, n_keep, df=data_treat):
+    '''Finds most differentially expressed genes between two clsuters
+        
+        - Returns tuple: 
+            - return[0] is dict whose keys are genes and values are differences in expression
+            for gene between two clusters 
+            - return[1] is list of genes that caused a ValueError
+            '''
     most_diff_expressed = {}
     value_error = []
     values = [0]
