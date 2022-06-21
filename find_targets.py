@@ -32,6 +32,7 @@ vec_strip = np.vectorize(str_strip)
 
 def match_surf(list_of_lists=synonyms):
     '''Construct extended_surfaceome - basic gene names for surface genes and also synonyms
+        
         - Helpful for identifying GBM genes that are surface genes because you get more options to match
         individual GBM gene with'''
     extended_surfaceome = []
@@ -50,7 +51,7 @@ def express_lookup_gene(gene):
     return data.loc[f"{gene}"][data.loc[f"{gene}"] > 0]
 
 def genes_expressed(cluster, data=data_treat):
-    """Returns a list of all the genes recorded to be expressed in a particular cluster"""
+    '''Returns a list of all the genes recorded to be expressed in a particular cluster'''
     expressed = []
     for i in data.index:
         try:
