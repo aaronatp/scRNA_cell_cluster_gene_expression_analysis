@@ -1,4 +1,5 @@
-import lookup_gene, differential_expression
+from lookup_gene import *
+from differential_expression import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
