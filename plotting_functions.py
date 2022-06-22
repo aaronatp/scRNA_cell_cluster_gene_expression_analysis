@@ -1,7 +1,7 @@
 from lookup_gene import *
 import numpy as np
 import pandas as pd
-import matplotlib.plot as plt
+import matplotlib.pyplot as plt
 
 def expression_distribution(gene, cluster):
     '''Returns dict - keys are statistical concepts and dict-values are numerical values for those concepts'''
