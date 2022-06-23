@@ -8,6 +8,10 @@ import re
 import sys, os
   
   
+surface_genes = pd.read_csv('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/surface_genes.csv')
+surface_genes.rename(columns={'To': 'Genes'}, inplace=True)
+surface_genes.drop(columns=['Unnamed: 0', 'From'], inplace=True)  
+  
 brain_genes = pd.read_csv('/Users/aaronpresser/Downloads/genes_expressed_in_brain_proteinatlas.tsv', sep='\t')
 human_genes = pd.read_csv('/Users/aaronpresser/Downloads/human_genes_proteinatlas.tsv', sep='\t')
 
@@ -19,12 +23,6 @@ def synonym_cleaner(string):
         return ''
 
 synonyms = human_genes['Gene synonym'].apply(synonym_cleaner)
-
-
-surface_genes = pd.read_csv('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/surface_genes.csv')
-surface_genes.rename(columns={'To': 'Genes'}, inplace=True)
-surface_genes.drop(columns=['Unnamed: 0', 'From'], inplace=True)
-
 surfaceome_concat = ' '.join(i for i in surface_genes['Genes'])
 
 # Helper
