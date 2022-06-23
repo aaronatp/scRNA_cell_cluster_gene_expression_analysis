@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Usesr
 def expression_distribution(gene, cluster):
     '''Returns dict - keys are statistical concepts and dict-values are numerical values for those concepts'''
     distribution = {}
@@ -26,7 +27,7 @@ def expression_distribution(gene, cluster):
         return print(f"{gene} appears to only be expressed in one cell in this cluster. "
                     "No distribution can be inferred from this data unfortunately")
       
-
+# Helper
 def format_string(string):
     split_string = string.split('. ')
     counter = 0
@@ -42,7 +43,7 @@ def format_string(string):
     
     return output_string
 
-    
+# Helper
 def plotting_statement(gene, cluster_num, group_num):
     groups = ['_CTRL', '_TREAT']
     with HiddenPrints():
@@ -52,7 +53,7 @@ def plotting_statement(gene, cluster_num, group_num):
     
     return format_string(f"{gene} is expressed {cell_number} cells in cluster {str(cluster_num) + groups[group_num]}. It has a median expression of {median} transcripts per cell. There are at least {low} transcripts in each cell\n")
 
-
+# User
 def plot_expression_distribution(gene, cluster_num):
     '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster' '''
     groups = ['_CTRL', '_TREAT']
