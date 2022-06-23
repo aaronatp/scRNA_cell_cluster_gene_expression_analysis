@@ -3,6 +3,7 @@ from plotting_functions import *
 import numpy as np
 import pandas as pd
 
+# User
 def diff_expression(gene, cluster1, cluster2):
     '''Finds difference in proportion of cells that express gene between two clusters
             
@@ -27,7 +28,7 @@ def diff_expression(gene, cluster1, cluster2):
     else:
         return dict1[cluster1] - dict1[cluster2]
     
-
+# User
 def most_diff_exp(cluster1, cluster2, n_keep, df=data_treat):
     '''Finds most differentially expressed genes between two clsuters
         
@@ -75,7 +76,7 @@ def most_diff_exp(cluster1, cluster2, n_keep, df=data_treat):
 with open('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/diff_exp_treat_6_0_gbm_myeloid.txt','w') as d:
     d.write(str(diff_exp_treat_6_0))
     
-
+# User
 def compare_to_rest(cluster1, cluster2, thresh, n_keep, group=None, df=data_treat):
     '''Returns dict - keys are genes that are differentially expressed between cluster1
         and cluster2, and are not expressed greater than 'thresh' in any other cluster,
@@ -95,10 +96,11 @@ def compare_to_rest(cluster1, cluster2, thresh, n_keep, group=None, df=data_trea
           f"{cluster2}, that are not expressed in more than {thresh} of any other cluster, are:")
     return clusters_keep
 
-    
+# Helper
 def effect(dict1, dict2, dict_entry):
     return dict1[f"{dict_entry}"] - dict2[f"{dict_entry}"]
 
+# User
 def compare_treat_ctrl(dictionary, cluster_num):
     '''Compares expression of genes in treat and control of same cluster
         - Returns dict: keys are genes, values are list of statistical information'''
