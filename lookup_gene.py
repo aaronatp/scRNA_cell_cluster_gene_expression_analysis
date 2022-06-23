@@ -34,7 +34,7 @@ for i in range(len(length)):
     cells_to_clusters['Cell_total'][str(i) + '_CTRL'] = data_dict[str(i) + '_CTRL']
     cells_to_clusters['Cell_total'][str(i) + '_TREAT'] = data_dict[str(i) + '_TREAT']
 
-    
+# Helper
 class HiddenPrints:
     '''Hides print statements of code called within it'''
     def __enter__(self):
@@ -45,7 +45,7 @@ class HiddenPrints:
         sys.stdout.close()
         sys.stdout = self._original_stdout   
 
-        
+# User    
 def sorted_counter_dict(gene, data=data, proportion=True):
     """Returns a dict of clusters and proportion of cells that express 'gene'"""
     gene_names = data.loc[f'{gene}'][data.loc[f'{gene}'] > 0].index
@@ -64,7 +64,7 @@ def sorted_counter_dict(gene, data=data, proportion=True):
         gene_dict = {k: i for k,i in gene_dict.items()}
     return {k: v for k, v in sorted(gene_dict.items(), key=lambda item: item[1], reverse=True)}
 
-
+# Helper
 def sort_dict_by_freq(store):
     '''Sorts a dictionary's items by the frequency of the values in it'''
     freq = {} 
@@ -79,7 +79,7 @@ def sort_dict_by_freq(store):
     store = dict(sorted(store.items(), key=lambda item: pos.index(item[1]))) 
     return store
 
-
+# User
 def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, raw=False):
     """By default, will see whether input gene is unique,
         - if the input matches more than one gene in list, returns list of genes that match
@@ -126,6 +126,6 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
         most_common_clusters = list(filter(lambda a: a != second, most_common_clusters))
         third = max(set(most_common_clusters), key=most_common_clusters.count)
         
-        return print(f"The genes and their most common clusters are:\n{cluster_significances}\n\n\
-The most common cluster is {first}, followed by {second}, followed by {third}")
+        return print(f"The genes and their most common clusters are:\n{cluster_significances}\n\n\"
+                f"The most common cluster is {first}, followed by {second}, followed by {third}")
     
