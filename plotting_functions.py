@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Usesr
+# User
 def expression_distribution(gene, cluster):
     '''Returns dict - keys are statistical concepts and dict-values are numerical values for those concepts'''
     distribution = {}
