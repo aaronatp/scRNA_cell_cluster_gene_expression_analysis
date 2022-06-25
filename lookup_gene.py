@@ -1,3 +1,17 @@
+# # Starting with a 'seurat_integrated' object, code used to produce 'cells_to_cluster.csv':
+# ```{r}
+# library(data.table)
+# data_to_write <- as.data.frame(as.matrix(seurat_integrated@active.ident))
+# fwrite(x=data_to_write, row.names=TRUE, file="cells_to_clusters.csv")
+# ```
+#
+# # Starting with a 'seurat_integrated' object, code used to produce 'seurat_integrated.csv':
+# ```{r}
+# library(data.table)
+# data_to_write <- as.data.frame(as.matrix(seurat_integrated@assays$RNA@counts))
+# fwrite(x=data_to_write, row.names=TRUE, file="seurat_integrated.csv")
+# ```
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
