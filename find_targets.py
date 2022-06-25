@@ -8,12 +8,12 @@ import re
 import sys, os
   
   
-surface_genes = pd.read_csv('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/surface_genes.csv')
+surface_genes = pd.read_csv('./Gene_expression_analysis/surface_genes.csv')
 surface_genes.rename(columns={'To': 'Genes'}, inplace=True)
 surface_genes.drop(columns=['Unnamed: 0', 'From'], inplace=True)  
   
-brain_genes = pd.read_csv('/Users/aaronpresser/Downloads/genes_expressed_in_brain_proteinatlas.tsv', sep='\t')
-human_genes = pd.read_csv('/Users/aaronpresser/Downloads/human_genes_proteinatlas.tsv', sep='\t')
+brain_genes = pd.read_csv('./Downloads/genes_expressed_in_brain_proteinatlas.tsv', sep='\t')
+human_genes = pd.read_csv('./Downloads/human_genes_proteinatlas.tsv', sep='\t')
 
 # Helper
 def synonym_cleaner(string):
