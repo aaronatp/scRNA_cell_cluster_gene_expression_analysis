@@ -1,3 +1,4 @@
 I intend to clean up the code in some of the differential_expression functions, specifically "lookup_gene()" - there are some parameters 
 I included in earlier iterations of the function that are no longer necessary and I plan on removing those parameters and the code that used them.
-Also, I plan on implementing looping in the "plot_differential_expression()" function in the "plotting_functions" module. 
+Also, I plan on implementing looping in the "plot_differential_expression()" function in the "plotting_functions" module. I also want to clean up the 
+documentation for a number of the functions.
