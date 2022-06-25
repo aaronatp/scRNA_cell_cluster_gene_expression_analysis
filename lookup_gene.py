@@ -126,6 +126,7 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
         most_common_clusters = list(filter(lambda a: a != second, most_common_clusters))
         third = max(set(most_common_clusters), key=most_common_clusters.count)
         
-        return print(f"The genes and their most common clusters are:\n{cluster_significances}\n\n\"
+        print(f"The genes and their most common clusters are:\n{cluster_significances}"
                 f"The most common cluster is {first}, followed by {second}, followed by {third}")
-    
+        
+        return
