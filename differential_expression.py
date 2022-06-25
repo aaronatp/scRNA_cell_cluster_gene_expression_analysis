@@ -73,7 +73,7 @@ def most_diff_exp(cluster1, cluster2, n_keep, df=data_treat):
     return most_diff_expressed, value_error
   
 # Save output of most_diff_exp('6_TREAT', '0_TREAT', 100)
-with open('/Users/aaronpresser/files_from_quest/Filesfrom_Quest/Peng_RNA_seq/Gene_expression_analysis/diff_exp_treat_6_0_gbm_myeloid.txt','w') as d:
+with open('./Gene_expression_analysis/diff_exp_treat_6_0_gbm_myeloid.txt','w') as d:
     d.write(str(diff_exp_treat_6_0))
     
 # User
