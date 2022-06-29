@@ -1,4 +1,4 @@
-name: data_analysis_practice
+name: scRNA_seq_analysis
 channels:
   - conda-forge
   - bioconda
@@ -179,4 +179,4 @@ dependencies:
     - import-ipynb==0.1.4
     - natsort==8.0.2
     - setuptools==60.1.1
-prefix: /Users/aaronpresser/miniconda3/envs/data_analysis_practice
+prefix: /Users/aaronpresser/miniconda3/envs/scRNA_seq_analysis
