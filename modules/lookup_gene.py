@@ -93,7 +93,7 @@ def lookup_gene(gene=None, sure=False, gene_list=None, df=data, counter=False, r
         if len(options) > 1 and sure==False:
             list_of_options = '\n'.join(i for i in options)
             print(f"There are multiple genes that match your search:")
-            return list_of_options
+            return print(list_of_options)
         if len(options) == 0:
             return print("Try again")
         if sure == True and raw == True:
