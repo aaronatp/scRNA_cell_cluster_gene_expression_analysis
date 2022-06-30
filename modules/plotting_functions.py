@@ -58,6 +58,7 @@ def plotting_statement(gene, cluster_num, group_num):
     return format_string(f"{gene} is expressed in {int(pct_cells_expressing * cell_number)} of the {cell_number} cells "
                          f"({val}%) in cluster {str(cluster_num) + groups[group_num]}. It has a median expression of "
                          f"{median} transcripts per cell. There are at least {low} transcripts in each cell\n")
+
 # User
 def plot_expression_distribution(gene, cluster_num, ecdf=False):
     '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster' '''
