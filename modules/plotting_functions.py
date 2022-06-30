@@ -3,6 +3,8 @@ from differential_expression import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+from statsmodels.distributions.empirical_distribution import ECDF
 
 # User
 def expression_distribution(gene, cluster):
@@ -50,11 +52,14 @@ def plotting_statement(gene, cluster_num, group_num):
         cell_number = data_dict[str(cluster_num) + groups[group_num]]
         median = expression_distribution(gene=gene, cluster=str(cluster_num) + groups[group_num])['Median']
         low = expression_distribution(gene=gene, cluster=str(cluster_num) + groups[group_num])['Low']
+        pct_cells_expressing = expression_distribution(gene=gene, cluster=str(cluster_num) + groups[group_num])['Pct of cells']
     
-    return format_string(f"{gene} is expressed {cell_number} cells in cluster {str(cluster_num) + groups[group_num]}. It has a median expression of {median} transcripts per cell. There are at least {low} transcripts in each cell\n")
-
+    val = float("{:.2f}".format(pct_cells_expressing*100))
+    return format_string(f"{gene} is expressed in {int(pct_cells_expressing * cell_number)} of the {cell_number} cells "
+                         f"({val}%) in cluster {str(cluster_num) + groups[group_num]}. It has a median expression of "
+                         f"{median} transcripts per cell. There are at least {low} transcripts in each cell\n")
 # User
-def plot_expression_distribution(gene, cluster_num):
+def plot_expression_distribution(gene, cluster_num, ecdf=False):
     '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster' '''
     groups = ['_CTRL', '_TREAT']
     
@@ -70,13 +75,31 @@ def plot_expression_distribution(gene, cluster_num):
     except TypeError:
         return print(f"{gene} is only recorded to be expressed in one cell in {str(cluster_num) + groups[counter]} unfortunately")
     
+    if ecdf == True:
+        data_groups = [data1, data2]
+        markers = ['o', '.']
+        labels = ['CTRL', 'TREAT']
+        for data, marker, group in zip(data_groups, markers, labels):
+            data = ECDF(data)
+            plt.plot(data.x, data.y, label=f"{group}", marker=f"{marker}")
+        
+        plt.legend(loc="lower right")
+        plt.xlabel(f'{gene} gene transcripts', fontsize=12)
+        return
+    
     fig, ax = plt.subplots(1,2, sharex=True, figsize=(15,5))
     plt1 = ax[0].hist(data1, bins='rice')
     plt2 = ax[1].hist(data2, bins='rice')
     
-    ax[0].text(0.5,-0.4, plotting_statement(gene, cluster_num, group_num=0), size=12, ha='center',
+    ax[0].text(0.5,-0.45, plotting_statement(gene, cluster_num, group_num=0), size=12, ha='center',
              transform=ax[0].transAxes)
-    ax[1].text(0.5,-0.4, plotting_statement(gene, cluster_num, group_num=1), size=12, ha="center", 
+    ax[0].yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax[0].set_xlabel('Gene transcripts', fontsize=12)
+    ax[0].set_ylabel('Number of cells', fontsize=12)
+    
+    ax[1].text(0.5,-0.45, plotting_statement(gene, cluster_num, group_num=1), size=12, ha="center", 
              transform=ax[1].transAxes)
+    ax[1].yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax[1].set_xlabel('Gene transcripts', fontsize=12)
     
     return
