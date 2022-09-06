@@ -21,7 +21,7 @@ class HiddenPrints:
         sys.stdout = self._original_stdout   
 
 # User    
-def sorted_counter_dict(gene, data=data, proportion=True):
+def sorted_counter_dict(gene, data=data):
     """Returns a dict of clusters and proportion of cells that express 'gene'"""
     gene_names = data.loc[f'{gene}'][data.loc[f'{gene}'] > 0].index
     num_cells_in_each_cluster = cells_to_clusters['Cell_total']
@@ -32,11 +32,9 @@ def sorted_counter_dict(gene, data=data, proportion=True):
             gene_dict[i] += 1
         except KeyError:
             gene_dict[i] = 1
+            
+    gene_dict = {k: i for k,i in gene_dict.items()}
     
-    if proportion == True:
-        gene_dict = {k: i/data_dict[k] for k,i in gene_dict.items()}
-    else:
-        gene_dict = {k: i for k,i in gene_dict.items()}
     return {k: v for k, v in sorted(gene_dict.items(), key=lambda item: item[1], reverse=True)}
 
 # Helper
@@ -55,8 +53,16 @@ def _sort_dict_by_freq(store):
     return store
 
 
+def get_matching_genes(gene, df):
+    """Gets list of genes that contain the queried string"""
+    return df.filter(like=f'{gene}', axis=0).index
+
 def _gene_expression_helper(gene, sure, df):
-    options = df.filter(like=f'{gene}', axis=0).index
+    """If no genes found, tells user to try again
+        If multiple genes found, prints possible genes
+        If one gene found, returns a sorted dictionary of the expression of that gene in clusters where it is expressed
+        """
+    options = get_matching_genes(gene, df=df)
     if len(options) == 0:
         return print("Try again")
     elif len(options) > 1 and sure==False:
@@ -80,8 +86,8 @@ def _gene_list_printing_statement(sorted_cluster_significances):
             f"The most common cluster is {first}, followed by {second}, followed by {third}")
     
     
-def _gene_list_helper(gene=gene, sure=sure, df=df):
-    counter==True and gene_list is not None:
+def _gene_list_helper(gene_list, sure, df):
+    """Returns what a sorted statement of clusters that most coexpress the genes in gene_list"""
     cluster_significances = {}
     for i in gene_list:
         try:
