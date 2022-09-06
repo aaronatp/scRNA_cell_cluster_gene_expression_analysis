@@ -2,10 +2,7 @@ from lookup_gene import *
 from differential_expression import *
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import re
-
-import sys, os
   
   
 surface_genes = pd.read_csv('./Gene_expression_analysis/surface_genes.csv')
