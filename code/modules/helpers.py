@@ -16,23 +16,23 @@ brain_genes = pd.read_csv('./Downloads/genes_expressed_in_brain_proteinatlas.tsv
 human_genes = pd.read_csv('./Downloads/human_genes_proteinatlas.tsv', sep='\t')
 
 # Helper
-def synonym_cleaner(string):
+def _synonym_cleaner(string):
     try:
         return string.strip().split(',')
     except AttributeError:
         return ''
 
-synonyms = human_genes['Gene synonym'].apply(synonym_cleaner)
+synonyms = human_genes['Gene synonym'].apply(_synonym_cleaner)
 surfaceome_concat = ' '.join(i for i in surface_genes['Genes'])
 
 # Helper
-def str_strip(string):
+def _str_strip(string):
     return string.strip()
 
-vec_strip = np.vectorize(str_strip)
+vec_strip = np.vectorize(_str_strip)
 
 # Helper
-def match_surf(list_of_lists=synonyms):
+def _match_surf(list_of_lists=synonyms):
     '''Construct extended_surfaceome - basic gene names for surface genes and also synonyms
         
         - Helpful for identifying GBM genes that are surface genes because you get more options to match
@@ -46,24 +46,6 @@ def match_surf(list_of_lists=synonyms):
     return extended_surfaceome
   
 # Helper
-def express_lookup_gene(gene):
+def _express_lookup_gene(gene):
     '''lookup_gene() shortcut fit for purposes of genes_expressed()'''
     return data.loc[f"{gene}"][data.loc[f"{gene}"] > 0]
-
-# User
-def genes_expressed(cluster, data=data_treat):
-    '''Returns a list of all the genes recorded to be expressed in a particular cluster'''
-    expressed = []
-    for i in data.index:
-        try:
-            express_lookup_gene(gene=i)[cluster]
-            print(f"{i} is expressed in {cluster}")
-            expressed.append(i)
-        except KeyError:
-            print(f"\t{i} isn't expressed")
-            continue
-    return expressed
-
-gbm_genes = genes_expressed(cluster='6_TREAT')
-
-gbm_surface_genes = [gene for gene in gbm_genes if gene in match_surf(synonyms)]
