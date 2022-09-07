@@ -30,7 +30,7 @@ def expression_distribution(gene, cluster):
                     "No distribution can be inferred from this data unfortunately")
       
 # Helper
-def format_string(string):
+def _format_string(string):
     split_string = string.split('. ')
     counter = 0
     new_list = []
@@ -46,7 +46,7 @@ def format_string(string):
     return output_string
 
 # Helper
-def plotting_statement(gene, cluster_num, group_num):
+def _plotting_statement(gene, cluster_num, group_num):
     groups = ['_CTRL', '_TREAT']
     with HiddenPrints():
         cell_number = data_dict[str(cluster_num) + groups[group_num]]
@@ -55,52 +55,59 @@ def plotting_statement(gene, cluster_num, group_num):
         pct_cells_expressing = expression_distribution(gene=gene, cluster=str(cluster_num) + groups[group_num])['Pct of cells']
     
     val = float("{:.2f}".format(pct_cells_expressing*100))
-    return format_string(f"{gene} is expressed in {int(pct_cells_expressing * cell_number)} of the {cell_number} cells "
+    return _format_string(f"{gene} is expressed in {int(pct_cells_expressing * cell_number)} of the {cell_number} cells "
                          f"({val}%) in cluster {str(cluster_num) + groups[group_num]}. It has a median expression of "
                          f"{median} transcripts per cell. There are at least {low} transcripts in each cell\n")
 
-# User
-def plot_expression_distribution(gene, cluster_num, ecdf=False):
-    '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster' '''
-    groups = ['_CTRL', '_TREAT']
-    
-    counter = 0
+
+def _get_gene_counts(gene, cluster_num)
     try:
-        data1 = np.hstack(list(lookup_gene(gene=gene, sure=True, raw=True)[str(cluster_num) + groups[0]]))
-        counter += 1
-        data2 = np.hstack(list(lookup_gene(gene=gene, sure=True, raw=True)[str(cluster_num) + groups[1]]))
-        
+        data1, data2 = express_gene_lookup(gene, cluster_num, 'CTRL'), express_gene_lookup(gene, cluster_num, 'TREAT')
     except KeyError:
         return print(f"Can't find {gene} in both clusters")
-    
     except TypeError:
-        return print(f"{gene} is only recorded to be expressed in one cell in {str(cluster_num) + groups[counter]} unfortunately")
+        return sys.exit("Type Error!")
     
-    if ecdf == True:
-        data_groups = [data1, data2]
-        markers = ['o', '.']
-        labels = ['CTRL', 'TREAT']
-        for data, marker, group in zip(data_groups, markers, labels):
-            data = ECDF(data)
-            plt.plot(data.x, data.y, label=f"{group}", marker=f"{marker}")
+def plot_ecdf(gene, cluster_num):
+    # Get data to plot
+    data1, data2 = _get_gene_counts(gene, cluster_num, 'CTRL'), _get_gene_counts(gene, cluster_num, 'TREAT')
+    data_groups = [data1, data2]
+    # Configure ECDF plot
+    markers = ['o', '.']
+    labels = ['CTRL', 'TREAT']
+    for data, marker, group in zip(data_groups, markers, labels):
+        data = ECDF(data)
+        plt.plot(data.x, data.y, label=f"{group}", marker=f"{marker}")
         
-        plt.legend(loc="lower right")
-        plt.xlabel(f'{gene} gene transcripts', fontsize=12)
-        return
-    
+    plt.legend(loc="lower right")
+    plt.xlabel(f'{gene} gene transcripts', fontsize=12)
+    return
+
+def _histogram_and_annotate(gene, cluster_num, group_num):
+    # Set 'group' corresponding to 'group_num'
+    if group_num == 0:
+        group := 'CTRL'
+    if group_num == 1:
+        group := 'TREAT'
+    # Configure plot
+    ax[group_num].text(0.5,-0.45, _plotting_statement(gene, cluster_num, group), size=12, ha='center',
+             transform=ax[group_num].transAxes)
+    ax[group_num].yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax[group_num].set_xlabel('Gene transcripts', fontsize=12)
+    ax[group_num].set_ylabel('Number of cells', fontsize=12)
+    return
+
+# User
+def plot_expression_distribution(gene, cluster_num):
+    '''Returns plot of distribution of gene transcripts levels for 'gene' in 'cluster' '''    
+    # Get data to plot
+    data1, data2 = _get_gene_counts(gene, cluster_num, 'CTRL'), _get_gene_counts(gene, cluster_num, 'TREAT')    
+    # Configure plot
     fig, ax = plt.subplots(1,2, sharex=True, figsize=(15,5))
     plt1 = ax[0].hist(data1, bins='rice')
     plt2 = ax[1].hist(data2, bins='rice')
     
-    ax[0].text(0.5,-0.45, plotting_statement(gene, cluster_num, group_num=0), size=12, ha='center',
-             transform=ax[0].transAxes)
-    ax[0].yaxis.set_major_locator(MaxNLocator(integer=True))
-    ax[0].set_xlabel('Gene transcripts', fontsize=12)
-    ax[0].set_ylabel('Number of cells', fontsize=12)
-    
-    ax[1].text(0.5,-0.45, plotting_statement(gene, cluster_num, group_num=1), size=12, ha="center", 
-             transform=ax[1].transAxes)
-    ax[1].yaxis.set_major_locator(MaxNLocator(integer=True))
-    ax[1].set_xlabel('Gene transcripts', fontsize=12)
+    _histogram_and_annotate(gene, cluster_num, 0)
+    _histogram_and_annotate(gene, cluster_num, 1)
     
     return
