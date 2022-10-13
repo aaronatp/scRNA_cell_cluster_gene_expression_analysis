@@ -1,3 +1,5 @@
+### NOTE: This code is likely unusable right now, I am in the process of refactoring it.
+
 # Tools for analyzing scRNA-seq counts data
 This repository contains tools that I have found helpful for analyzing scRNA-seq data generated with Seurat. In the top of the 'seurat_object_to_csv.Rmd' file, I have included some code for porting the data used here from Seurat objects to csv files. I hope that the tools here will be useful and helpful for other people analyzing scRNA-seq data. Please let me know if you think there is any more functionality that would be useful to have in this sort of package.
 
